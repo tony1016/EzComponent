@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+		  implements="com.ezlife.ezcomponent.interfaces.IBizDataInitialize,
+		  com.ezlife.ezcomponent.interfaces.IBizDataSubmit">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.ezlife.ezcomponent.interfaces.IBizDataContract;
+			import com.ezlife.ezcomponent.message.BizInitializeDataReadyMessage;
+			import com.ezlife.ezcomponent.message.BroadcastMessage;
+			import com.ezlife.ezcomponent.model.BizInitializeData;
+			import com.ezlife.ezcomponent.util.LogFormatter;
+			
+			import flash.utils.getQualifiedClassName;
+			
+			import mx.collections.ArrayCollection;
+			import mx.logging.ILogger;
+			import mx.logging.Log;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TitleWindow;
+			
+			import org.spicefactory.parsley.core.context.Context;
+			[MessageDispatcher]
+			public var dispatcher:Function;
+			
+			private var _isBizInitialized:Boolean=false;
+			
+			[Inject]
+			public var bizInitailizeData:BizInitializeData;
+			
+			[Inject(id="bizGroups")]
+			public var bizGroups:ArrayCollection;
+			
+			[Inject(id="contractPool")]
+			public var contractPool:Array;
+			
+			[Inject]
+			public var context:Context;
+			
+			protected var log:ILogger = Log.getLogger("com.ezlife.ezcomponent");
+			
+			[Init]
+			final public function onContextInitialized():void{
+				if(bizInitailizeData.isAvailable() && !_isBizInitialized){
+					log.debug(LogFormatter.appendClassname("Begin biz initialize",this));
+					_isBizInitialized=true;
+					processInitialize(this.bizInitailizeData);
+				}else{
+					log.debug(LogFormatter.appendClassname("Skip biz initialize because of:[bizInitailizeData.isAvailable:" +bizInitailizeData.isAvailable()+
+						",_isBizInitialized:" +_isBizInitialized+
+						"]",this));
+				}
+			}
+			
+			[MessageHandler]
+			final public function handleBizInitializeDataReady(msg:BizInitializeDataReadyMessage):void{
+				var data:Object=msg.data;
+				if(data.isAvailable() && !_isBizInitialized){
+					log.debug(LogFormatter.appendClassname("Begin biz initialize",this));
+					_isBizInitialized=true;
+					processInitialize(this.bizInitailizeData);
+				}
+				else{
+					log.debug(LogFormatter.appendClassname("Skip biz initialize because of:[bizInitailizeData.isAvailable:" +bizInitailizeData.isAvailable()+
+						",_isBizInitialized:" +_isBizInitialized+
+						"]",this));
+				}
+			}
+			
+			final private function processInitialize(bizInitailizeData:BizInitializeData):void{
+				beforeBizInitialize(bizInitailizeData);
+				bizInitialize(bizInitailizeData);
+				afterBizInitialize(bizInitailizeData);
+			}
+			
+			/**
+			 * 页面初始化前的回调方法
+			 * 因为页面内的个逻辑组(标签布局中的每个标签或者瀑布布局中的每个块)自动完成数据铺设，因此对于页面来说，基本没有初始化的内容。但是有需要可以复写该方法
+			 */
+			public function beforeBizInitialize(bizInitailizeData:BizInitializeData):void{
+				
+			}
+			
+			public function bizInitialize(bizInitailizeData:BizInitializeData):void{
+				
+			}
+			
+			/**
+			 * 页面初始化后的回调方法，有需要可以复写
+			 * 注意，因为各个逻辑组是(标签布局中的每个标签或者瀑布布局中的每个块)自己完成初始化的，因此页面初始化结束和各逻辑组初始化结束没有关系
+			 */
+			public function afterBizInitialize(bizInitailizeData:BizInitializeData):void{
+				
+			}
+			
+			
+			final public function registerContract(contract:IBizDataContract,type:Class):void{
+				contractPool[getQualifiedClassName(type)]=contract;
+			}
+			
+			final public function getContractByType(type:Class):IBizDataContract{
+				return contractPool[getQualifiedClassName(type)];
+			}
+			
+			final public function popupChildComponent(win:TitleWindow,parent:DisplayObject,isModal:Boolean=false):void{
+				context.viewManager.addViewRoot(win);
+				PopUpManager.addPopUp(win,parent,isModal);
+				PopUpManager.centerPopUp(win);
+			}
+			
+			final protected function broadcastMessage(id:String,data:Object):void{
+				dispatcher(new BroadcastMessage(id,data));
+			}
+			
+			[MessageHandler]
+			final public function handleBroadcastMessage(message:BroadcastMessage):void{
+				this.onReceiveBroadcastMessage(message.id,message.data);
+			}
+			
+			protected function onReceiveBroadcastMessage(id:String,data:Object):void{
+				
+			}
+			
+			/**
+			 * 页面将各个逻辑组(标签布局中的每个标签或者瀑布布局中的每个块)数据收集好之后，向后台提交前的回调方法
+			 * 有需要可以复写，比如来调整发送到后台的数据
+			 */
+			public function beforeBizDataSubmit(data:Object):void{
+				
+			}
+			
+			public function bizDataSubmit(data:Object):void{
+				log.info(LogFormatter.appendClassname("Must overwrite bizDataSubmit to make it success",this));
+			}
+		]]>
+	</fx:Script>
+</s:Group>

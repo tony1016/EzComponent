@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base:BaseLogicBoard xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+					xmlns:parsley="http://www.spicefactory.org/parsley"
+					implements="com.ezlife.ezcomponent.interfaces.IBizDataCollect" xmlns:base="com.ezlife.ezcomponent.layout.base.*">
+	<fx:Declarations>
+		<parsley:Configure/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.ezlife.ezcomponent.interfaces.IBizDataCollect;
+			import com.ezlife.ezcomponent.util.LogFormatter;
+			
+			import mx.utils.ObjectUtil;
+			
+			
+			
+			
+			
+			[Init]
+			final public function registerSelf():void{
+				this.bizGroups.addItem(this);
+				log.info(LogFormatter.appendClassname("Child Component added",this));
+			}
+			
+			[Destroy]
+			final public function unregisterSelf():void{
+				this.bizGroups.removeItemAt(this.bizGroups.getItemIndex(this));
+				log.info(LogFormatter.appendClassname("Child Component removed",this));
+			}
+			
+			/**
+			 * 开始数据收集
+			 */
+			public function bizDataCollect():Object{
+				var data:Object=new Object();
+				return data;
+			}
+			
+			/**
+			 * 数据收集前调用，你可以复写这个方法，来调整页面上的一些数据
+			 */
+			public function beforeBizDataCollect():void{
+				
+			}
+			
+			/**
+			 * 数据收集后调用，你可以复写这个方法，来调整页面上的一些数据
+			 */
+			public function afterBizDataCollect(data:Object):void{
+				
+			}
+			
+			public function getBizId():String{
+				return this.name;
+			}
+			
+			
+			public function submit():void{
+				var data:Object=new Object();
+				var collect:IBizDataCollect=this as IBizDataCollect;
+				collect.beforeBizDataCollect();
+				var childData:Object=collect.bizDataCollect();
+				collect.afterBizDataCollect(childData);
+				data=childData;
+				
+				beforeBizDataSubmit(data);
+				
+				log.info(LogFormatter.appendClassname("Data before func bizDataSubmit:"+ObjectUtil.toString(data),this));
+				
+				bizDataSubmit(data);
+			}
+			
+			
+		]]>
+	</fx:Script>
+</base:BaseLogicBoard>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.ezlife.ezcomponent.message.BaseMessage"/>
+    <classEntry path="com.ezlife.ezcomponent.model.BizInitializeData"/>
+    <classEntry path="com.ezlife.ezcomponent.message.BizInitializeDataReadyMessage"/>
+    <classEntry path="com.ezlife.ezcomponent.util.LogFormatter"/>
+    <classEntry path="com.ezlife.ezcomponent.interfaces.IBizDataInitialize"/>
+    <classEntry path="com.ezlife.ezcomponent.interfaces.IBizDataSubmit"/>
+    <classEntry path="com.ezlife.ezcomponent.interfaces.IBizDataCollect"/>
+    <classEntry path="com.ezlife.ezcomponent.message.SubmitImmediatelyMessage"/>
+    <classEntry path="com.ezlife.ezcomponent.model.SubmitIdentity"/>
+    <classEntry path="com.ezlife.ezcomponent.message.SubmitResultMessage"/>
+    <classEntry path="com.ezlife.ezcomponent.interfaces.IBizDataContract"/>
+    <classEntry path="com.ezlife.ezcomponent.layout.base.BaseLogicBoard"/>
+    <classEntry path="com.ezlife.ezcomponent.message.BroadcastMessage"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

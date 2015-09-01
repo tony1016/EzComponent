@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base:BaseGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx"
+					xmlns:base="com.bocom.ezcomponent.layout.base.*" initialize="onInitialize(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import spark.components.NavigatorContent;
+			
+			protected function onInitialize(event:FlexEvent):void
+			{
+				NavigatorContent(this.parentDocument.owner).label=this.getGroupTitle();
+			}
+			
+		]]>
+	</fx:Script>
+	
+</base:BaseGroup>

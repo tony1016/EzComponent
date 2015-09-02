@@ -84,3 +84,27 @@ Flex的开发者都知道，Flex已经有几个成熟的框架了，比如PureMV
 ```
 
 数据组装成什么样，完全是组件自身的bizDataCollect():Object吐出什么样的数据格式。
+
+## 6.组件间广播消息
+传统的Flex的事件机制，有一个很大的问题，就是只能冒泡似的从里向外进行事件通知，但是平行的控件之间，却没办法直接沟通。因此，EzComponent利用Parsley的message服务，构建了一套组件之间广播消息的机制：
+- broadcastMessage(id:String,data:Object):void 广播消息，需要两个参数：一个消息ID，一个消息体
+- handleBroadcastMessage(message:BroadcastMessage):void 接受处理消息。因为是广播，因此需要ID进行鉴别是否是自己想要的消息。
+
+注意这两个方法在页面和组件上都有，因此，可以在任意功能部件之间通信
+
+## 7.用契约，而不是直接访问对方的数据
+通常，我们需要一个组件的数据时，都是提供一个接口直接访问它，但是这会让两个组件紧密耦合在一起。对于重构和控制都不是好事情。因此，我们设计了一套契约接口。由数据请求者设计契约，数据拥有着实现契约，最终登记在框架层面，随时查询和取用，这包括如下接口：
+- registerContract(contract:IBizDataContract,type:Class):void 注册契约实现到框架。第一个参数是契约实例，第二个参数是契约的Type，一般就是你的契约接口类型
+- getContractByType(type:Class):IBizDataContract 通过契约类型获取具体的实现实例。
+
+## 8.其它
+
+EzComponent，在写作之时，一直有个类似于PureMvc的想法，就是提供一套逻辑思路，而不是一个在Flex上的特殊实现，这样子，该套想法可以一直到JavaScr，Java等等语言。
+
+另外，在写作该项目的Readme时，忽然听到 Simon & Garfunkel 的 The Sound Of Silence，(对，《毕业生》的那首著名的主题曲)，其中的歌词，忽然让人觉得，科技带给人们的疏远，让人唏嘘不已，正如这句
+> People talking without speaking
+People hearing without listening
+People writing songs that voices never share
+And no one dare disturb the sound of silence
+"Fools" said I, "You do not know
+Silence like a cancer grows”
